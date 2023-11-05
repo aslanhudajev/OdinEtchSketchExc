@@ -1,6 +1,8 @@
 //creating root 
 const root = document.querySelector("body");
 const MAX = 100;
+const FADE_AMOUNT = 255/10;
+
 const COLORS = ["red", "blue", "green", "purple", "yellow"];
 
 let row = 16;
@@ -39,7 +41,7 @@ gridBttn.textContent = "Update grid";
 gridBttn.addEventListener("click", UpdateGrid);
 
 const colBttn = document.createElement("button");
-colBttn.textContent = "Draw mode";
+colBttn.textContent = "Color mode";
 colBttn.id = "color";
 colBttn.addEventListener("click", UpdateState);
 
@@ -48,13 +50,22 @@ rndBttn.textContent = "Random mode";
 rndBttn.id = "random";
 rndBttn.addEventListener("click", UpdateState);
 
+const fadeBttn = document.createElement("button");
+fadeBttn.textContent = "Fade mode";
+fadeBttn.id = "fade";
+fadeBttn.addEventListener("click", UpdateState);
+
 controls.appendChild(rowInput);
 controls.appendChild(colInput);
 controls.appendChild(gridBttn);
 controls.appendChild(colBttn);
 controls.appendChild(rndBttn);
+controls.appendChild(fadeBttn);
 container.appendChild(controls);
 
+let mouseDown = false;
+document.body.onmousedown = () => (mouseDown = true);
+document.body.onmouseup = () => (mouseDown = false);
 
 CreateGrid(row, col);
 
@@ -70,7 +81,8 @@ function CreateGrid(r, c)
         for (let index = 0; index < c; index++) {
             let cell = document.createElement("div");
             cell.classList.add("cell");
-            cell.addEventListener("mouseover", draw)
+            cell.addEventListener("mouseover", draw);
+            cell.addEventListener("mousedown", draw);
 
             //gridRow.appendChild(cell);
             gridInner.appendChild(cell);
@@ -107,14 +119,23 @@ function EraseGrid()
 
 function draw(e)
 {
+    if(e.type == "mouseover" && !mouseDown) return;
+
     if(state == "color")
     {
-        e.target.style.backgroundColor = "black";
+        e.target.style.backgroundColor = "rgba(0, 0, 0, 1)";
     }
     else if(state == "random")
     {
         i = GetRandomRange(COLORS.length);
         e.target.style.backgroundColor = `${COLORS[i]}`;
+    }
+    else
+    {
+        let s = window.getComputedStyle(e.target);
+        let c = s.getPropertyValue("background-color"); 
+        let rgb = c.match(/\d+/g);
+        e.target.style.backgroundColor = `rgba(${rgb[0] - FADE_AMOUNT}, ${rgb[1] - FADE_AMOUNT}, ${rgb[2] - FADE_AMOUNT}, 1)`;
     }
 }
 
@@ -122,11 +143,18 @@ function UpdateState(e)
 {
     if(e.target.id == "color")
     {
+        UpdateGrid();
         state = "color";
     } 
+    else if (e.target.id == "random")
+    {
+        UpdateGrid();
+        state = "random";
+    }
     else
     {
-        state = "random";
+        UpdateGrid();
+        state = "fade"
     }
 }
 

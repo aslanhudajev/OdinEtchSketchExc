@@ -31,11 +31,19 @@ body
 
 .cell
 {
+    background-color: rgba(255, 255, 255, 1);
     width: auto;
     height: auto;
     border-width: 1px;
     border-style: solid;
     border-color: black;
+
+    user-drag: none;
+    -webkit-user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
 }
 
 .black

@@ -13,10 +13,16 @@ let state = "color";
 const container = document.createElement("div");
 container.classList.add("container");
 
+//creating title
+const title = document.createElement("h1");
+title.classList.add("title");
+title.textContent = "Sketch Away!"
+
 //creating grid container
 const gridInner = document.createElement("div");
 gridInner.classList.add("inner");
 
+container.appendChild(title);
 container.appendChild(gridInner);
 root.appendChild(container);
 

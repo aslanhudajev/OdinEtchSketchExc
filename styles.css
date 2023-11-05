@@ -59,3 +59,9 @@ body
     justify-content: center;
     padding: 1em;
 }
+
+.title
+{
+    font-family: arial;
+    font-style: bold;
+}
